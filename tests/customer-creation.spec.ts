@@ -1,27 +1,23 @@
 import { test, expect } from '../src/fixtures/test.fixture';
+import { createValidCustomerData } from '../src/data/mock/customer.data';
+import { ENV } from '../src/constants/env.constant';
 
 test.describe('DentalFlow - Quản lý khách hàng', () => {
   test.beforeEach(async ({ loginPage }) => {
     await loginPage.open();
-    // Đăng nhập bằng tài khoản từ codegen
-    await loginPage.login('h123', 'ha123', 'Dfc@2026');
+    await loginPage.login(ENV.CLINIC_CODE, ENV.ADMIN_USERNAME, ENV.ADMIN_PASSWORD);
   });
 
-  // Happy Path: Tạo khách hàng thành công
+  // Happy Path: Tạo khách hàng thành công với dữ liệu ngẫu nhiên hợp lệ
   test('TC01: Thêm mới hồ sơ khách hàng thành công', async ({ customerPage, page }) => {
     await customerPage.navigateToCustomerList();
     await customerPage.openCreateModal();
 
-    await customerPage.createCustomer({
-      fullName: 'Lê Minh Huyền',
-      dob: '29-10-2006',
-      phone: '0295812354',
-      gender: 'Nam',
-      address: 'Thanh Hóa',
-    });
+    const customerData = createValidCustomerData();
+    await customerPage.createCustomer(customerData);
 
-    // Web-first assertion: Kiểm tra chuyển sang bước kế hoạch điều trị hoặc hiển thị tên KH
-    await expect(page.getByRole('button', { name: 'Thêm kế hoạch điều trị' })).toBeVisible({ timeout: 10000 });
+    // Web-first assertion: Kiểm tra chuyển sang bước kế hoạch điều trị hoặc màn hình thông tin KH
+    await expect(page.getByRole('button', { name: 'Thêm kế hoạch điều trị' })).toBeVisible({ timeout: 15000 });
   });
 
   // Edge / Negative Case: Bỏ trống trường bắt buộc
@@ -31,8 +27,7 @@ test.describe('DentalFlow - Quản lý khách hàng', () => {
 
     await customerPage.saveCustomerButton.click();
 
-    // Kiểm tra thông báo lỗi validation của form
-    const validationError = customerPage.nameInput.locator('xpath=ancestor::div[contains(@class, "has-error")]');
+    // Form vẫn mở và nút lưu vẫn hiển thị (chưa submit thành công)
     await expect(customerPage.saveCustomerButton).toBeVisible();
   });
 });

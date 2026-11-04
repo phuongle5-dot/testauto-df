@@ -1,3 +1,7 @@
+# Environment variables
+.env
+.env.*
+!.env.example
 
 # Playwright
 node_modules/
@@ -6,3 +10,8 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+*.log

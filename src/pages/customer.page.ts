@@ -1,16 +1,10 @@
 import { type Locator, type Page } from '@playwright/test';
 import { BasePage } from './base.page';
+import { CustomerData } from '../data/models/customer.model';
 
-export interface CustomerData {
-  fullName: string;
-  dob: string;       // Định dạng dd-mm-yyyy
-  phone: string;
-  gender: 'Nam' | 'Nữ' | 'Khác';
-  address: string;
-}
+export { CustomerData };
 
 export class CustomerPage extends BasePage {
-  readonly customerMenuLink: Locator;
   readonly addNewCustomerButton: Locator;
   readonly nameInput: Locator;
   readonly dobInput: Locator;
@@ -21,9 +15,8 @@ export class CustomerPage extends BasePage {
 
   constructor(page: Page) {
     super(page);
-    this.customerMenuLink = page.getByRole('link', { name: 'Quản lý khách hàng' });
     this.addNewCustomerButton = page.getByRole('button', { name: 'Thêm mới khách hàng' });
-    
+
     // Form thêm mới khách hàng
     this.nameInput = page.locator('#create-patient-records_name').getByRole('textbox');
     this.dobInput = page.locator('#create-patient-records_dob').getByRole('textbox', { name: 'dd-mm-yyyy' });
@@ -33,8 +26,11 @@ export class CustomerPage extends BasePage {
     this.saveCustomerButton = page.getByRole('button', { name: 'Lưu thông tin' });
   }
 
+  /**
+   * Điều hướng đến danh sách khách hàng qua sidebar menu
+   */
   async navigateToCustomerList(): Promise<void> {
-    await this.customerMenuLink.click();
+    await this.sidebar.navigateToCustomerManagement();
   }
 
   async openCreateModal(): Promise<void> {
