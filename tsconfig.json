@@ -1,13 +1,20 @@
+// ==============================================================================
+// FILE: tsconfig.json
+// MỤC ĐÍCH: Cấu hình trình biên dịch TypeScript (tsc) cho toàn bộ dự án testauto-df.
+// Thiết lập chuẩn cú pháp ES, tính năng kiểm tra kiểu (strict) và path mapping (alias).
+// ==============================================================================
 {
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "CommonJS",
-    "moduleResolution": "node",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
+    "target": "ES2022",                  // Biên dịch về chuẩn JavaScript hiện đại
+    "module": "CommonJS",                // Chuẩn module CommonJS tương thích tốt với Node.js và Playwright
+    "moduleResolution": "node",          // Cơ chế tìm kiếm module theo chuẩn Node.js
+    "strict": true,                      // Bật kiểm tra kiểu nghiêm ngặt (tránh lỗi null/undefined tiềm ẩn)
+    "esModuleInterop": true,             // Hỗ trợ import linh hoạt giữa ES module và CommonJS
+    "skipLibCheck": true,                // Bỏ qua kiểm tra kiểu trong các file thư viện .d.ts để tăng tốc biên dịch
+    "forceConsistentCasingInFileNames": true, // Bắt buộc đúng chữ hoa/thường trong tên file (tránh lỗi khi lên Linux/CI)
+    "baseUrl": ".",                      // Thư mục gốc để phân giải các đường dẫn tương đối
+    
+    // Đường dẫn rút gọn (Path Aliases) giúp import file ngắn gọn và rõ ràng hơn
     "paths": {
       "@pages/*": ["src/pages/*"],
       "@components/*": ["src/components/*"],
@@ -17,6 +24,6 @@
       "@utils/*": ["src/utils/*"]
     }
   },
+  // Các file và thư mục mà TypeScript cần theo dõi và kiểm tra kiểu
   "include": ["src/**/*", "tests/**/*", "playwright.config.ts"]
 }
-

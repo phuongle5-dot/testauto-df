@@ -1,27 +1,50 @@
+# ==============================================================================
+# FILE: .github/workflows/playwright.yml
+# MỤC ĐÍCH: Luồng CI/CD (Continuous Integration) tự động hóa bằng GitHub Actions.
+# - Tự động kích hoạt khi có Push hoặc Pull Request vào nhánh main / master.
+# - Cài đặt môi trường Node.js và các trình duyệt của Playwright.
+# - Chạy toàn bộ test suite và tải artifact (HTML Report) lên GitHub sau khi chạy xong.
+# ==============================================================================
+
 name: Playwright Tests
+
+# Điều kiện kích hoạt workflow
 on:
   push:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+
 jobs:
   test:
-    timeout-minutes: 60
-    runs-on: ubuntu-latest
+    timeout-minutes: 60      # Giới hạn thời gian tối đa chạy job là 60 phút
+    runs-on: ubuntu-latest   # Chạy trên máy ảo hệ điều hành Ubuntu mới nhất
+
     steps:
+    # 1. Kéo mã nguồn dự án từ repository về máy ảo CI
     - uses: actions/checkout@v4
+
+    # 2. Cài đặt môi trường Node.js phiên bản LTS
     - uses: actions/setup-node@v4
       with:
         node-version: lts/*
+
+    # 3. Cài đặt các thư viện dependencies được khai báo trong package-lock.json
     - name: Install dependencies
       run: npm ci
+
+    # 4. Tải các trình duyệt Playwright (Chromium, Firefox, WebKit) kèm các gói phụ thuộc hệ điều hành
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
+
+    # 5. Chạy toàn bộ kịch bản kiểm thử Playwright
     - name: Run Playwright tests
       run: npx playwright test
+
+    # 6. Tải báo cáo kiểm thử (Playwright Report) lên artifacts để tải về xem ngay cả khi test fail
     - uses: actions/upload-artifact@v4
-      if: ${{ !cancelled() }}
+      if: ${{ !cancelled() }} # Luôn chạy bước này trừ khi job bị hủy thủ công
       with:
         name: playwright-report
         path: playwright-report/
-        retention-days: 30
+        retention-days: 30    # Giữ báo cáo trong 30 ngày

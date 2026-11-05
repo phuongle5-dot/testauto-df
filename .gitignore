@@ -1,17 +1,23 @@
-# Environment variables
+# ==============================================================================
+# FILE: .gitignore
+# MỤC ĐÍCH: Chỉ định các file và thư mục mà Git cần bỏ qua (không theo dõi & commit).
+# Giúp giữ kho mã nguồn gọn gàng, bảo mật và không bị phình dung lượng.
+# ==============================================================================
+
+# 1. Biến môi trường và dữ liệu bảo mật (bỏ qua file chứa secret, giữ lại file .example)
 .env
 .env.*
 !.env.example
 
-# Playwright
+# 2. Thư viện phụ thuộc và thư mục sinh ra khi chạy Playwright test
 node_modules/
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
-/playwright/.auth/
+/test-results/         # Chứa video, ảnh chụp màn hình khi test thất bại
+/playwright-report/    # Báo cáo HTML sau khi hoàn tất test
+/blob-report/          # Báo cáo dạng blob phục vụ merge report trên CI
+/playwright/.cache/    # Cache của Playwright
+/playwright/.auth/     # Lưu session/cookies đăng nhập (tránh lộ session)
 
-# OS / Editor
+# 3. File rác từ hệ điều hành & file log
 .DS_Store
 Thumbs.db
 *.log
